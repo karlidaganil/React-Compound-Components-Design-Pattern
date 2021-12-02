@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Card from "./Card";
+import React, { useState, useEffect } from "react";
+import { CardContext } from "./useCardContext";
+import axios from "axios";
 
-function App() {
+const App = () => {
+  const [initialState, setInitialState] = useState({});
+  const fetchData = React.useCallback(() => {
+    axios.get("https://rickandmortyapi.com/api/character/1").then((res) => {
+      setInitialState(res.data);
+    });
+  }, []);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <CardContext.Provider value={initialState}>
+        <Card>
+          <Card.Title></Card.Title>
+          <Card.Body></Card.Body>
+        </Card>
+      </CardContext.Provider>
     </div>
   );
-}
+};
 
 export default App;
